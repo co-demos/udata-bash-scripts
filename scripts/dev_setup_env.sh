@@ -12,6 +12,8 @@
 
 ### - - - - - - - - - - - - - - - ### 
 
+### launch with 
+### sh ./scripts/dev_setup_env.sh
 
 
 echo
@@ -159,6 +161,7 @@ if [ "$yn" != "${yn#[Yy]}" ] ;then
     source $UDATA_VENV/bin/activate 
 
     # install requirements in venv
+    pip install --upgrade pip
     pip install -r requirements/develop.pip
     pip install -e .
 
@@ -191,7 +194,7 @@ if [ "$yn" != "${yn#[Yy]}" ] ;then
 
 
   ### - - - - - - - - - - - - - - - ### 
-  ### NODE JS
+  ### UDATA - NODE JS ASSETS
   ### - - - - - - - - - - - - - - - ### 
   echo "${STEPPER}"
   yn_default="y"
@@ -226,6 +229,27 @@ if [ "$yn" != "${yn#[Yy]}" ] ;then
     echo 
   fi
 
+
+  ### - - - - - - - - - - - - - - - ### 
+  ### UDATA INITIALIZATION
+  ### - - - - - - - - - - - - - - - ### 
+  echo "${STEPPER}"
+  echo 
+  STEP_N="Initializing uData DB : ..." 
+  echo $STEP_N
+  echo
+  sleep .2
+
+
+  # Initialize database, indexes...
+  source $UDATA_VENV/bin/activate 
+  udata init
+
+  # Optionnaly fetch and load some licenses from another udata instance
+  udata licenses https://www.data.gouv.fr/api/1/datasets/licenses
+
+  # Compile translations
+  inv i18nc
 
 
 
@@ -275,9 +299,8 @@ if [ "$yn" != "${yn#[Yy]}" ] ;then
       npm install
       inv assets-build
 
-      # cd $UDATA_FOLDER
-      # pip install -e ../$UDATA_GOUVFR_FOLDER
-      pip install -e $UDATA_GOUVFR_FOLDER
+      cd ../$UDATA_FOLDER
+      pip install -e ../$UDATA_GOUVFR_FOLDER
       echo 
 
     else
@@ -287,8 +310,9 @@ if [ "$yn" != "${yn#[Yy]}" ] ;then
     fi
 
     ### back to udata folder 
-    cd ..
-    cd $UDATA_FOLDER
+    # cd ..
+    # cd $UDATA_FOLDER
+    inv assets-build
     echo "PWD after theme : ${PWD}"
 
   else
@@ -298,31 +322,6 @@ if [ "$yn" != "${yn#[Yy]}" ] ;then
 
 
   #say_what "$STEP_N - étape terminée"
-
-
-
-
-
-  ### - - - - - - - - - - - - - - - ### 
-  ### UDATA INITIALIZATION
-  ### - - - - - - - - - - - - - - - ### 
-  echo "${STEPPER}"
-  echo 
-  STEP_N="Initializing uData DB : ..." 
-  echo $STEP_N
-  echo
-  sleep .2
-
-
-  # Initialize database, indexes...
-  source $UDATA_VENV/bin/activate 
-  udata init
-
-  # Optionnaly fetch and load some licenses from another udata instance
-  udata licenses https://www.data.gouv.fr/api/1/datasets/licenses
-
-  # Compile translations
-  inv i18nc
 
 
 
@@ -339,9 +338,12 @@ if [ "$yn" != "${yn#[Yy]}" ] ;then
 
 
   # Build front + watch hot reload
+  echo "... Build front + watch hot reload : dev_start_watch.sh"
   newtabi "cd ${PWD} && source ${UDATA_VENV}/bin/activate && sh ./scripts/dev_start_watch.sh"
+  sleep 60
 
   # Run server
+  echo "... Run server : dev_start_serve.sh"
   #say_what "$STEP_N - étape terminée"
   newtabi "cd ${PWD} && source ${UDATA_VENV}/bin/activate && sh ./scripts/dev_start_serve.sh" 
 

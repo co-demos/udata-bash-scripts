@@ -50,10 +50,26 @@ It is collectively taken care of by members of the
 - chained installation with scripts
 
   ```bash
+  sh run_setup.sh
+  ```
+
+  OR ...
+
+  ```bash
+  ### clone scripts
+  # git clone https://github.com/co-demos/udata-bash-scripts.git
+
+  ### clone udata
+  cd ..
   git clone https://github.com/co-demos/udata.git udata
   cd udata
+  cp -r ../udata-bash-scripts/scripts .
   sh ./scripts/dev_setup_env.sh
   ```
+
+----------
+
+#### run dev mode
 
 - run with scripts (only if dev environment is set up)
 

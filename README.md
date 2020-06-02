@@ -50,17 +50,19 @@ It is collectively taken care of by members of the
 - chained installation with scripts
 
   ```bash
+  cd udata-bash-scripts
   sh run_setup.sh
   ```
 
-  OR ...
+  **Or** if you want to do it step-by-step 
+  and perhaps add/change some little things 
+  before runnning the installer ...
 
   ```bash
   ### clone scripts
   # git clone https://github.com/co-demos/udata-bash-scripts.git
 
   ### clone udata
-  cd ..
   git clone https://github.com/co-demos/udata.git udata
   cd udata
   cp -r ../udata-bash-scripts/scripts .
